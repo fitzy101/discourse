@@ -19,7 +19,7 @@ jobs:
     name: run
     runs-on: debian-12
     container: discourse/discourse_test:slim
-    timeout-minutes: 10
+    timeout-minutes: 20
 
     steps:
       - uses: actions/checkout@v4
