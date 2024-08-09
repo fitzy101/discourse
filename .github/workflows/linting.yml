@@ -17,10 +17,12 @@ jobs:
   build:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: run
-    runs-on: ubuntu-latest
-    container: discourse/discourse_test:slim
+    runs-on: ['debian-12', 'fitzytest']
     timeout-minutes: 30
-
+    container:
+      image: discourse/discourse_test:slim
+      volumes:
+        - /etc/ssl/certs:/etc/ssl/certs
     steps:
       - name: Set working directory owner
         run: chown root:root .
@@ -44,6 +46,7 @@ jobs:
       - name: Setup gems
         run: |
           gem install bundler --conservative -v $(awk '/BUNDLED WITH/ { getline; gsub(/ /,""); print $0 }' Gemfile.lock)
+          bundle config set --local ssl_ca_cert /etc/ssl/certs/mitmproxy-ca-cert.crt
           bundle config --local path vendor/bundle
           bundle config --local deployment true
           bundle config --local without development
