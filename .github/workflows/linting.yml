@@ -18,9 +18,11 @@ jobs:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: run
     runs-on: ['debian-12', 'fitzytest']
-    container: discourse/discourse_test:slim
     timeout-minutes: 30
-
+    container:
+      image: discourse/discourse_test:slim
+      volumes:
+        - /etc/ssl/certs:/etc/ssl/certs
     steps:
       - name: Set working directory owner
         run: chown root:root .
